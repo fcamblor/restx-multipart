@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class PartListeners {
 
-    public interface File {
+    public interface Stream {
         void onFilePart(MultipartStream multipartStream, String filename, String contentType) throws IOException;
     }
 
@@ -17,7 +17,7 @@ public class PartListeners {
             void onTextPart(String content) throws IOException;
         }
 
-    public static class RestxStream implements File, Closeable {
+    public static class PipedStream implements Stream, Closeable {
         private InputStream pipedInputStream;
         private String filename;
         private String contentType;

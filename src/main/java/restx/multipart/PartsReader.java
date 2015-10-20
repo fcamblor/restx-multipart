@@ -17,15 +17,15 @@ import java.util.Map;
 
 public class PartsReader {
     private final RestxRequest req;
-    private Map<String, PartListeners.File> filePartListeners = new HashMap<>();
+    private Map<String, PartListeners.Stream> streamPartListeners = new HashMap<>();
     private Map<String, PartListeners.Text> textPartListeners = new HashMap<>();
 
     public PartsReader(RestxRequest req) {
         this.req = req;
     }
 
-    public PartsReader onFilePart(String name, PartListeners.File listener) {
-        filePartListeners.put(name, listener);
+    public PartsReader onFilePart(String name, PartListeners.Stream listener) {
+        streamPartListeners.put(name, listener);
         return this;
     }
 
@@ -41,7 +41,7 @@ public class PartsReader {
      * reading them.
      */
     public void readParts() throws IOException {
-        if(filePartListeners.isEmpty() && textPartListeners.isEmpty()) {
+        if(streamPartListeners.isEmpty() && textPartListeners.isEmpty()) {
             throw new IllegalStateException("You called readParts() without registering part listeners (onXXXPart())");
         }
 
@@ -80,10 +80,10 @@ public class PartsReader {
 
             String cType = headers.get("content-type");
             if (cType != null) {
-                if(!filePartListeners.containsKey(partName)){
+                if(!streamPartListeners.containsKey(partName)){
                     throw new IllegalStateException(String.format("file part listener declaration missing for part with name [%s]", partName));
                 }
-                filePartListeners.get(partName).onFilePart(multipartStream, parameters.get("filename"), cType);
+                streamPartListeners.get(partName).onFilePart(multipartStream, parameters.get("filename"), cType);
             } else {
                 ByteArrayOutputStream data = new ByteArrayOutputStream();
                 multipartStream.readBodyData(data);
