@@ -1,5 +1,6 @@
 package restx.multipart;
 
+import com.google.common.base.Optional;
 import org.apache.commons.fileupload.MultipartStream;
 
 import java.io.*;
@@ -10,7 +11,7 @@ import java.io.*;
 public class PartListeners {
 
     public interface Stream {
-        void onFilePart(MultipartStream multipartStream, String filename, String contentType) throws IOException;
+        void onFilePart(MultipartStream multipartStream, Optional<String> filename, String contentType) throws IOException;
     }
 
     public interface Text {
@@ -23,9 +24,9 @@ public class PartListeners {
         private String contentType;
 
         @Override
-        public void onFilePart(MultipartStream multipartStream, String filename, String contentType) throws IOException {
+        public void onFilePart(MultipartStream multipartStream, Optional<String> filename, String contentType) throws IOException {
             this.pipedInputStream = pipeOutputStreamToInputStream(multipartStream);
-            this.filename = filename;
+            this.filename = filename.orNull();
             this.contentType = contentType;
         }
 

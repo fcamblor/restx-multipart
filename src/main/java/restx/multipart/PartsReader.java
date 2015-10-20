@@ -83,7 +83,7 @@ public class PartsReader {
                 if(!streamPartListeners.containsKey(partName)){
                     throw new IllegalStateException(String.format("file part listener declaration missing for part with name [%s]", partName));
                 }
-                streamPartListeners.get(partName).onFilePart(multipartStream, parameters.get("filename"), cType);
+                streamPartListeners.get(partName).onFilePart(multipartStream, Optional.fromNullable(parameters.get("filename")), cType);
             } else {
                 ByteArrayOutputStream data = new ByteArrayOutputStream();
                 multipartStream.readBodyData(data);
