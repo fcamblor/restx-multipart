@@ -31,6 +31,12 @@ public class PartListeners {
         }
 
         private static InputStream pipeOutputStreamToInputStream(MultipartStream multipartStream) throws IOException {
+            // Important note: we're loading the WHOLE file content into memory here (through ByteArrayOutputStream)
+            // This is not ideal if we're working with big amounts of uploaded data
+            // We may thing of using Piped Input/Output stream instead, however, when passing PipedOutputStream
+            // to multipartStream.readBodyData(), thread is hanging forever (it seems like if output stream is buffered,
+            // piped stream are freezing the thread .. which is not happening with ByteArrayOutputStream as this is not
+            // a buffered stream)
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();) {
                 multipartStream.readBodyData(outputStream);
                 InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
