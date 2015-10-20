@@ -9,9 +9,9 @@
     <name>restx-multipart</name>
 
     <scm>
-        <connection>scm:git:git@github.com:ctruchi/restx-multipart.git</connection>
-        <developerConnection>scm:git:git@github.com:ctruchi/restx-multipart.git</developerConnection>
-        <url>https://github.com/ctruchi/restx-multipart.git</url>
+        <connection>scm:git:git@github.com:fcamblor/restx-multipart.git</connection>
+        <developerConnection>scm:git:git@github.com:fcamblor/restx-multipart.git</developerConnection>
+        <url>https://github.com/fcamblor/restx-multipart.git</url>
     </scm>
 
     <distributionManagement>
@@ -38,9 +38,9 @@
             <version>${restx.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.restx</groupId>
-            <artifactId>restx-server-jetty</artifactId>
-            <version>${restx.version}</version>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
         </dependency>
     </dependencies>
 </project>
