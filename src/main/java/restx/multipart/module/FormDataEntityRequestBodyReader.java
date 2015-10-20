@@ -1,4 +1,4 @@
-package restx.multipart;
+package restx.multipart.module;
 
 import com.google.common.io.Files;
 import org.eclipse.jetty.util.MultiPartInputStream;

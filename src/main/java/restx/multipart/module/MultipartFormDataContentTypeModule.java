@@ -1,24 +1,25 @@
-package restx.multipart;
+package restx.multipart.module;
 
 import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import restx.common.TypeReference;
 import restx.entity.EntityDefaultContentTypeProvider;
 import restx.entity.EntityRequestBodyReaderFactory;
 import restx.factory.Module;
 import restx.factory.Provides;
+import restx.multipart.PartsReader;
 
-import javax.servlet.http.Part;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
 @Module
 public class MultipartFormDataContentTypeModule {
 
-    private static final Logger logger = LoggerFactory.getLogger(MultipartFormDataContentTypeModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MultipartFormDataContentTypeModule.class);
 
     public static final String FORM_DATA_CONTENT_TYPE = "multipart/form-data";
-    public static final Type TYPE = new TypeReference<Collection<Part>>() {}.getType();
+    public static final Type TYPE = new TypeReference<PartsReader>() {}.getType();
 
     @Provides
     public EntityDefaultContentTypeProvider formDataDefaultContentTypeProvider() {
