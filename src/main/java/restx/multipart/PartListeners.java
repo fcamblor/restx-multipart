@@ -18,7 +18,7 @@ public class PartListeners {
             void onTextPart(String content) throws IOException;
         }
 
-    public static class PipedStream implements Stream, Closeable {
+    public static class PipedStreamGrabber implements Stream, Closeable {
         private InputStream pipedInputStream;
         private String filename;
         private String contentType;
@@ -65,6 +65,19 @@ public class PartListeners {
             if (hasStream()) {
                 this.pipedInputStream.close();
             }
+        }
+    }
+
+    public static class TextContentGrabber implements Text {
+        private String content;
+
+        @Override
+        public void onTextPart(String content) throws IOException {
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content;
         }
     }
 
