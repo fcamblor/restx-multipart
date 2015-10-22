@@ -34,7 +34,7 @@ public class PartListeners {
         }
     }
 
-    public static class PipedStreamGrabber extends AbstractPartListener implements Stream, Closeable {
+    public static class PipedStreamGrabber extends AbstractPartListener implements Stream, AutoCloseable {
         private InputStream pipedInputStream;
         private String filename;
         private String contentType;
