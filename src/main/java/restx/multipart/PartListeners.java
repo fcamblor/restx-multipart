@@ -10,18 +10,40 @@ import java.io.*;
  */
 public class PartListeners {
 
-    public interface Stream {
+    public interface PartListener {
+        boolean isMandatory();
+    }
+
+    public interface Stream extends PartListener {
         void onFilePart(MultipartStream multipartStream, Optional<String> filename, String contentType) throws IOException;
     }
 
-    public interface Text {
-            void onTextPart(String content) throws IOException;
+    public interface Text extends PartListener {
+        void onTextPart(String content) throws IOException;
+    }
+
+    public static abstract class AbstractPartListener implements PartListener {
+        protected boolean mandatory;
+
+        public AbstractPartListener(boolean mandatory) {
+            this.mandatory = mandatory;
         }
 
-    public static class PipedStreamGrabber implements Stream, Closeable {
+        public boolean isMandatory() {
+            return mandatory;
+        }
+    }
+
+    public static class PipedStreamGrabber extends AbstractPartListener implements Stream, Closeable {
         private InputStream pipedInputStream;
         private String filename;
         private String contentType;
+
+        // By default, grabber is mandatory
+        public PipedStreamGrabber(){ this(true); }
+        public PipedStreamGrabber(boolean mandatory) {
+            super(mandatory);
+        }
 
         @Override
         public void onFilePart(MultipartStream multipartStream, Optional<String> filename, String contentType) throws IOException {
@@ -68,8 +90,14 @@ public class PartListeners {
         }
     }
 
-    public static class TextContentGrabber implements Text {
+    public static class TextContentGrabber extends AbstractPartListener implements Text {
         private String content;
+
+        // By default, grabber is mandatory
+        public TextContentGrabber(){ this(true); }
+        public TextContentGrabber(boolean mandatory) {
+            super(mandatory);
+        }
 
         @Override
         public void onTextPart(String content) throws IOException {
