@@ -4,7 +4,7 @@
 
     <groupId>io.restx</groupId>
     <artifactId>restx-multipart</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <name>restx-multipart</name>
 
@@ -12,7 +12,8 @@
         <connection>scm:git:git@github.com:fcamblor/restx-multipart.git</connection>
         <developerConnection>scm:git:git@github.com:fcamblor/restx-multipart.git</developerConnection>
         <url>https://github.com/fcamblor/restx-multipart.git</url>
-    </scm>
+      <tag>restx-multipart-1.1</tag>
+  </scm>
 
     <distributionManagement>
         <repository>
