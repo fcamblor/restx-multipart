@@ -9,10 +9,7 @@ import restx.RestxRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 
 public class PartsReader {
@@ -64,6 +61,8 @@ public class PartsReader {
     }
 
     protected void _readParts() throws IOException {
+        Set<String> mandatoryPartNames = retrieveMandatoryPartNames();
+
         String contentType = req.getContentType();
         int boundaryIndex = contentType.indexOf("boundary=");
         byte[] boundary = (contentType.substring(boundaryIndex + 9)).getBytes();
@@ -121,8 +120,26 @@ public class PartsReader {
                 }
             }
 
+            mandatoryPartNames.remove(partName);
+
             nextPart = multipartStream.readBoundary();
         }
+
+        if(!mandatoryPartNames.isEmpty()) {
+            throw new IllegalStateException(String.format("Some mandatory parts you declared have not been sent : %s", mandatoryPartNames.toString()));
+        }
+    }
+
+    private Set<String> retrieveMandatoryPartNames() {
+        Set<String> mandatoryPartNames = new HashSet<>();
+        for(Map<String,? extends PartListeners.PartListener> partListenerMap : Arrays.asList(streamPartListeners, textPartListeners)){
+            for(Map.Entry<String,? extends PartListeners.PartListener> listenerEntry : partListenerMap.entrySet()){
+                if(listenerEntry.getValue().isMandatory()) {
+                    mandatoryPartNames.add(listenerEntry.getKey());
+                }
+            }
+        }
+        return mandatoryPartNames;
     }
 
     private Map<String, String> parseHeaders(String headerPart) {
