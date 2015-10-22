@@ -19,6 +19,9 @@ public class PartsReader {
     private final RestxRequest req;
     private Map<String, PartListeners.Stream> streamPartListeners = new HashMap<>();
     private Map<String, PartListeners.Text> textPartListeners = new HashMap<>();
+    private Status partsConsumptionStatus = Status.ready;
+
+    private enum Status { ready, consuming, consumed, error }
 
     public PartsReader(RestxRequest req) {
         this.req = req;
@@ -44,7 +47,23 @@ public class PartsReader {
         if(streamPartListeners.isEmpty() && textPartListeners.isEmpty()) {
             throw new IllegalStateException("You called readParts() without registering part listeners (onXXXPart())");
         }
+        if(partsConsumptionStatus != Status.ready) {
+            throw new IllegalStateException(String.format("You cannot call readParts() twice on a PartsReader ! (status: %s)", partsConsumptionStatus));
+        }
 
+        partsConsumptionStatus = Status.consuming;
+
+        try {
+            _readParts();
+            partsConsumptionStatus = Status.consumed;
+        }catch(Exception e){
+            partsConsumptionStatus = Status.error;
+            throw e;
+        }
+
+    }
+
+    protected void _readParts() throws IOException {
         String contentType = req.getContentType();
         int boundaryIndex = contentType.indexOf("boundary=");
         byte[] boundary = (contentType.substring(boundaryIndex + 9)).getBytes();
