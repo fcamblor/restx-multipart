@@ -36,6 +36,8 @@ public class UploadResource {
 
     @POST("/upload")
     @Consumes("multipart/form-data")
+    // To make it work, you need to inject a PartsReader onto your endpoint. 
+    // It will brings you a fluent API allowing to react to multipart form data inside your request
     public Status upload(PartsReader partsReader) throws IOException {
         // Creating a piped stream grabber to retrieve a particular multipart form data representing a binary file
         try(PartListeners.PipedStreamGrabber restxStreamListener = new PartListeners.PipedStreamGrabber(true);){
@@ -68,7 +70,9 @@ public class UploadResource {
 
                 file.save();
             }
-        }    
+        }
+        
+        return Status.of("created");
     }
 }
 ```
