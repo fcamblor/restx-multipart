@@ -39,13 +39,15 @@ public class UploadResource {
     // To make it work, you need to inject a PartsReader onto your endpoint. 
     // It will brings you a fluent API allowing to react to multipart form data inside your request
     public Status upload(PartsReader partsReader) throws IOException {
-        // Creating a piped stream grabber to retrieve a particular multipart form data representing a binary file
-        try(PartListeners.PipedStreamGrabber restxStreamListener = new PartListeners.PipedStreamGrabber(true);){
-            
+        try(
+            // Creating a piped stream grabber to retrieve a particular multipart form data representing a binary file
+            PartListeners.PipedStreamGrabber restxStreamListener = new PartListeners.PipedStreamGrabber(true);
             // Creating simple text grabber to retrieve a particular multipart form data text content
             PartListeners.TextContentGrabber assetTypeGrabber = new PartListeners.TextContentGrabber(true);
             // Same than previous one, except that if the multipart form data is absent, readParts() won't complain
             PartListeners.TextContentGrabber metaDataGrabber = new PartListeners.TextContentGrabber(false);
+        ){
+
             partsReader
                     .onTextPart("assetType", assetTypeGrabber)
                     .onTextPart("metadata", metaDataGrabber)
