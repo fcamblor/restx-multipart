@@ -78,3 +78,47 @@ public class UploadResource {
     }
 }
 ```
+
+Bonus : Downloading file sample
+=========
+You can write corresponding `AssetResource` allowing to download previously uploaded file stored into mongodb with following route :
+```
+import com.google.common.collect.ImmutableMap;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import restx.*;
+import restx.factory.Component;
+
+import javax.inject.Named;
+import java.io.IOException;
+
+@Component
+public class AssetResource extends ResourcesRoute {
+
+    static Logger log = LoggerFactory.getLogger(AssetResource.class);
+
+    private final GridFS gridFS;
+
+    public AssetResource(
+            @Named("app.assetsName") String name,
+            @Named("app.assetsBaseRestPath") String baseRestPath,
+            GridFS gridFS
+    ){
+        super(name, baseRestPath, "", ImmutableMap.<String,String>of("", "index.html"));
+        this.gridFS = gridFS;
+    }
+
+    @Override
+    public void handle(RestxRequestMatch match, RestxRequest req, RestxResponse resp, RestxContext ctx) throws IOException {
+        GridFSDBFile file = gridFS.findOne(new ObjectId(req.getRestxUri().replace(getBaseRestPath(), "")));
+        if(file == null){
+            return;
+        }
+        resp.setContentType(file.getContentType());
+        file.writeTo(resp.getOutputStream());
+    }
+}
+```
