@@ -82,7 +82,8 @@ public class UploadResource {
 Bonus : Downloading file sample
 =========
 You can write corresponding `AssetResource` allowing to download previously uploaded file stored into mongodb with following route :
-```
+
+```java
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
