@@ -3,7 +3,7 @@ package restx.multipart.module;
 import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import restx.common.TypeReference;
+import restx.types.TypeReference;
 import restx.entity.EntityDefaultContentTypeProvider;
 import restx.entity.EntityRequestBodyReaderFactory;
 import restx.factory.Module;
