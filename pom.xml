@@ -4,7 +4,7 @@
 
     <groupId>io.restx</groupId>
     <artifactId>restx-multipart</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2-beta1</version>
     <packaging>jar</packaging>
     <name>restx-multipart</name>
 
